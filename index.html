@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Redirect</title>
+</head>
+<body>
+<script>
+  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+  console.log(userAgent, 9999)
+
+  let appStoreLink = " https://apps.apple.com/us/app/bolola-armenian-statements/id1523054038"
+  let playStoreLink = "https://play.google.com/store/apps/details?id=com.armenia.famousstatements";
+  let defaultLink = "https://yourwebsite.com";
+
+  if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+    window.location.href = appStoreLink; // Redirect to the App Store
+  } else if (/android/i.test(userAgent)) {
+    window.location.href = playStoreLink;
+  } else {
+    window.location.href = defaultLink;
+  }
+</script>
+</body>
+</html>
+

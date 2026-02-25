@@ -140,7 +140,7 @@ If GitHub Actions fails, deploy manually:
 
 ```bash
 # 1. Build locally
-flutter build web --release --web-renderer html
+flutter build web --release
 
 # 2. Upload to server
 rsync -avz -e "ssh -p22" build/web/ root@173.249.9.31:/root/projects/bolola/build/web/

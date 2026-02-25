@@ -301,15 +301,38 @@ abstract class BaseVideoWidgetState<T extends BaseVideoWidget> extends State<T> 
       aspectRatio = _controller!.value.aspectRatio == 0 ? 16 / 9 : _controller!.value.aspectRatio;
     }
 
-    return AspectRatio(
-      aspectRatio: aspectRatio,
-      child: Stack(
-        children: [
-          VideoPlayer(_controller!),
-          buildPlayPauseOverlay(),
-        ],
-      ),
-    );
+    // For web, use nested structure to match thumbnail layout
+    // For mobile, use simple structure that was already working
+    if (kIsWeb && _imageAspectRatio != null) {
+      return AspectRatio(
+        aspectRatio: aspectRatio,
+        child: Container(
+          color: AppTheme.primaryDark,
+          child: Stack(
+            children: [
+              Center(
+                child: AspectRatio(
+                  aspectRatio: _controller!.value.aspectRatio == 0 ? 16 / 9 : _controller!.value.aspectRatio,
+                  child: VideoPlayer(_controller!),
+                ),
+              ),
+              buildPlayPauseOverlay(),
+            ],
+          ),
+        ),
+      );
+    } else {
+      // Mobile: Keep original simple structure
+      return AspectRatio(
+        aspectRatio: aspectRatio,
+        child: Stack(
+          children: [
+            VideoPlayer(_controller!),
+            buildPlayPauseOverlay(),
+          ],
+        ),
+      );
+    }
   }
 
   /// Build play/pause overlay
@@ -407,62 +430,62 @@ abstract class BaseVideoWidgetState<T extends BaseVideoWidget> extends State<T> 
         );
       }
 
-      return Stack(
-        alignment: Alignment.center,
-        children: [
-          Center(
-            child: AspectRatio(
-              aspectRatio: _imageAspectRatio!,
-              child: Image.network(
-                widget.item.imageUrl!,
-                fit: BoxFit.contain,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return AspectRatio(
-                    aspectRatio: _imageAspectRatio!,
-                    child: Container(
-                      color: AppTheme.primaryDark,
-                      child: const Center(
-                        child: CupertinoActivityIndicator(
-                          color: AppTheme.white,
-                          radius: 16,
+      // Use the same structure as video player: outer AspectRatio with inner centered content
+      return AspectRatio(
+        aspectRatio: _imageAspectRatio!,
+        child: Container(
+          color: AppTheme.primaryDark,
+          child: Stack(
+            children: [
+              Center(
+                child: AspectRatio(
+                  aspectRatio: _imageAspectRatio!,
+                  child: Image.network(
+                    widget.item.imageUrl!,
+                    fit: BoxFit.contain,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        color: AppTheme.primaryDark,
+                        child: const Center(
+                          child: CupertinoActivityIndicator(
+                            color: AppTheme.white,
+                            radius: 16,
+                          ),
                         ),
-                      ),
-                    ),
-                  );
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  return AspectRatio(
-                    aspectRatio: _imageAspectRatio!,
-                    child: Container(
-                      color: AppTheme.primaryDark,
-                      child: const Center(
-                        child: Icon(
-                          Icons.image_not_supported,
-                          color: AppTheme.textSecondary2,
-                          size: 40,
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: AppTheme.primaryDark,
+                        child: const Center(
+                          child: Icon(
+                            Icons.image_not_supported,
+                            color: AppTheme.textSecondary2,
+                            size: 40,
+                          ),
                         ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-          // Play button or loading spinner overlay
-          Center(
-            child: _isInitializing
-                ? const CupertinoActivityIndicator(
-                    color: AppTheme.accentCyan,
-                    radius: 16,
-                  )
-                : Icon(
-                    Icons.play_arrow_rounded,
-                    color: AppTheme.accentCyan,
-                    size: 40,
+                      );
+                    },
                   ),
+                ),
+              ),
+              // Play button or loading spinner overlay
+              Center(
+                child: _isInitializing
+                    ? const CupertinoActivityIndicator(
+                        color: AppTheme.accentCyan,
+                        radius: 16,
+                      )
+                    : Icon(
+                        Icons.play_arrow_rounded,
+                        color: AppTheme.accentCyan,
+                        size: 40,
+                      ),
+              ),
+            ],
           ),
-        ],
+        ),
       );
     } else {
       // For mobile or when no image URL, show default placeholder

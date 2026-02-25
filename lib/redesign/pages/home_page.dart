@@ -88,7 +88,7 @@ class _HomePageRouteState extends State<HomePageRoute> with TickerProviderStateM
     var initializationSettings = InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     // appBloc.flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
-    initRepo();
+    // Repository is now initialized in main.dart before AuthService
     pageController.addListener(() {
       setState(() {
         selectedPageIndex = pageController.page!.toInt();

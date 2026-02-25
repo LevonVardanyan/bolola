@@ -694,20 +694,33 @@ class Repository {
   /// Fetch admin users from Firebase Firestore
   Future<List<String>> getAdminUsers() async {
     try {
+      if (kDebugMode) {
+        print('Repository: Fetching admin users from Firestore collection: general/adminusers');
+      }
       DocumentSnapshot doc = await firebaseDB.collection("general").doc("adminusers").get();
 
       if (doc.exists && doc.data() != null) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         List<dynamic> adminsList = data['admins'] ?? [];
+        if (kDebugMode) {
+          print('Repository: Found admin list in Firestore: $adminsList');
+        }
 
         // Convert to list of strings and normalize to lowercase
-        return adminsList.map((email) => email.toString().toLowerCase().trim()).where((email) => email.isNotEmpty).toList();
+        final result = adminsList.map((email) => email.toString().toLowerCase().trim()).where((email) => email.isNotEmpty).toList();
+        if (kDebugMode) {
+          print('Repository: Normalized admin emails: $result');
+        }
+        return result;
       }
 
+      if (kDebugMode) {
+        print('Repository: Admin document does not exist or has no data');
+      }
       return [];
     } catch (e) {
       if (kDebugMode) {
-        print('Error fetching admin users: $e');
+        print('Repository: Error fetching admin users: $e');
       }
       return [];
     }

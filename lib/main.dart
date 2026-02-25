@@ -20,6 +20,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:politicsstatements/redesign/services/auth_service.dart';
 import 'package:politicsstatements/redesign/services/api_key_service.dart';
 import 'package:politicsstatements/redesign/resources/database/database_refactor.dart';
+import 'package:politicsstatements/redesign/resources/repository.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -94,6 +95,11 @@ void main() async {
       if (kDebugMode) print('Database initialization failed: $e');
       // Continue anyway - the app might still work with limited functionality
     }
+
+    // Initialize repository before AuthService so Firestore is available for admin checks
+    if (kDebugMode) print('Initializing repository...');
+    await initRepo();
+    if (kDebugMode) print('Repository initialized successfully');
 
     // Initialize AuthService early to ensure auth state listener is set up
     // This will check for logged-in users and admin status on both mobile and web

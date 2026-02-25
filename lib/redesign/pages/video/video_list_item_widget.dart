@@ -70,17 +70,14 @@ class _VideoItemWidgetState extends BaseVideoWidgetState<VideoItemWidget> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Expanded(
-            flex: 7,
+          ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(AppTheme.mediaCardRadius - 1),
+              topRight: Radius.circular(AppTheme.mediaCardRadius - 1),
+            ),
             child: Stack(
               children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(AppTheme.mediaCardRadius - 1),
-                    topRight: Radius.circular(AppTheme.mediaCardRadius - 1),
-                  ),
-                  child: buildVideoPlayer(),
-                ),
+                buildVideoPlayer(),
                 if (_isNewGroup)
                   Positioned(
                     top: 8,
@@ -91,10 +88,7 @@ class _VideoItemWidgetState extends BaseVideoWidgetState<VideoItemWidget> {
             ),
           ),
           buildSeekBar(),
-          Expanded(
-            flex: 3,
-            child: _buildWebVideoInfo(),
-          ),
+          _buildWebVideoInfo(),
         ],
       ),
     );
@@ -143,44 +137,46 @@ class _VideoItemWidgetState extends BaseVideoWidgetState<VideoItemWidget> {
   }
 
   Widget _buildWebVideoInfo() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Expanded(
-            child: Text(
-              widget.item.name ?? "",
-              style: AppTheme.mediaItemTitleStyle.copyWith(fontSize: 14),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Text(
+                widget.item.name ?? "",
+                style: AppTheme.mediaItemTitleStyle.copyWith(fontSize: 14),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          ),
-          const SizedBox(height: 4),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Text(
-                  "${widget.item.shareCount} shares",
-                  style: AppTheme.mediaItemSubtitleStyle.copyWith(fontSize: 12),
-                  overflow: TextOverflow.ellipsis,
+            const SizedBox(height: 4),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Text(
+                    "${widget.item.shareCount} shares",
+                    style: AppTheme.mediaItemSubtitleStyle.copyWith(fontSize: 12),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  buildFavoriteButton(),
-                  if (kIsWeb) const SizedBox(width: 8), // Add spacing between buttons on web
-                  buildShareButton(),
-                  if (kIsWeb) const SizedBox(width: 8), // Add spacing between buttons on web
-                  buildHelpUsButton(),
-                ],
-              ),
-            ],
-          ),
-        ],
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    buildFavoriteButton(),
+                    const SizedBox(width: 8),
+                    buildShareButton(),
+                    const SizedBox(width: 8),
+                    buildHelpUsButton(),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -217,7 +213,10 @@ class _VideoItemWidgetState extends BaseVideoWidgetState<VideoItemWidget> {
         Text(
           widget.item.name ?? "",
           style: AppTheme.mediaItemTitleStyle,
+          maxLines: 3,
+          overflow: TextOverflow.ellipsis,
         ),
+        const SizedBox(height: 2),
         Text(
           "Կիսվել են ${widget.item.shareCount} անգամ",
           style: AppTheme.mediaItemSubtitleStyle,

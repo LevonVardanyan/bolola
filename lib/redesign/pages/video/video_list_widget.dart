@@ -82,6 +82,9 @@ class _VideoListWidgetState extends State<VideoListWidget> {
   // Autoplay management
   Timer? _autoplayDebounce;
   final Map<String, double> _visibilityMap = {};
+  
+  // Dynamic aspect ratio based on first item
+  double? _firstItemAspectRatio;
 
   @override
   void initState() {
@@ -89,6 +92,11 @@ class _VideoListWidgetState extends State<VideoListWidget> {
     _items = List.from(widget.initialItems);
     // Disable autoplay on web
     _isAutoPlay = kIsWeb ? false : widget.isAutoPlay;
+
+    // Fetch first item's aspect ratio for dynamic card sizing
+    if (kIsWeb) {
+      _fetchFirstItemAspectRatio();
+    }
 
     // Add a small delay to ensure proper initialization on first load
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -120,7 +128,13 @@ class _VideoListWidgetState extends State<VideoListWidget> {
     // Update items
     setState(() {
       _items = List.from(newItems);
+      _firstItemAspectRatio = null; // Reset aspect ratio
     });
+    
+    // Fetch new first item's aspect ratio for dynamic card sizing
+    if (kIsWeb) {
+      _fetchFirstItemAspectRatio();
+    }
   }
 
   /// Set autoplay mode
@@ -195,6 +209,36 @@ class _VideoListWidgetState extends State<VideoListWidget> {
     });
   }
 
+  /// Fetch the first item's aspect ratio for dynamic card sizing
+  Future<void> _fetchFirstItemAspectRatio() async {
+    if (_items.isEmpty || _items[0].imageUrl == null || _items[0].imageUrl!.isEmpty) {
+      return;
+    }
+
+    try {
+      final image = Image.network(_items[0].imageUrl!);
+      final completer = Completer<void>();
+
+      image.image.resolve(const ImageConfiguration()).addListener(
+            ImageStreamListener((ImageInfo info, bool _) {
+              if (mounted) {
+                setState(() {
+                  _firstItemAspectRatio = info.image.width / info.image.height;
+                });
+              }
+              completer.complete();
+            }, onError: (exception, stackTrace) {
+              print('Error loading first item image for aspect ratio: $exception');
+              completer.complete();
+            }),
+          );
+
+      await completer.future;
+    } catch (e) {
+      print('Error fetching first item aspect ratio: $e');
+    }
+  }
+
   /// Get the number of columns based on screen width for web
   int _getWebColumnCount(double screenWidth) {
     if (screenWidth > 1200) {
@@ -227,12 +271,35 @@ class _VideoListWidgetState extends State<VideoListWidget> {
     // Calculate aspect ratio based on content needs
     double calculateAspectRatio() {
       if (isAdminUser) {
-        return 0.65; // Increased from 0.5 - less tall, better for video display
+        return 0.65; // Static ratio for admin interface (was working well)
       } else {
-        // Regular users: video (16:9) + compact info section
-        // Video section (flex: 6) + Info section (flex: 3) = 9 total
-        // Optimized for video content with minimal info
-        return 0.85; // Width:Height ratio (good balance for video + info)
+        // If we have the first item's aspect ratio, calculate dynamic card size
+        if (_firstItemAspectRatio != null) {
+          // Calculate actual card width based on screen width and columns
+          final horizontalPadding = 16.0 * 2; // left + right padding
+          final crossAxisSpacing = 12.0 * (columnCount - 1); // spacing between columns
+          final availableWidth = screenWidth - horizontalPadding - crossAxisSpacing;
+          final cardWidth = availableWidth / columnCount;
+          
+          // Video aspect ratio (width/height) from thumbnail
+          final videoAspectRatio = _firstItemAspectRatio!;
+          
+          // Calculate video height based on card width
+          final videoHeight = cardWidth / videoAspectRatio;
+          
+          // Fixed pixel heights for seek bar + info section
+          // Seek bar: ~40px, Info: ~100px = ~140px total
+          final fixedHeightsPixels = 140.0;
+          
+          // Total card height in pixels (with 15% extra for longer titles)
+          final totalCardHeight = videoHeight + (fixedHeightsPixels * 1.15);
+          
+          // Card aspect ratio = width / height
+          return cardWidth / totalCardHeight;
+        }
+        
+        // Fallback to default ratio while aspect ratio is loading
+        return 0.70; // Width:Height ratio - taller cards for better title visibility
       }
     }
 

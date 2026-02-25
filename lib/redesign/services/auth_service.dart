@@ -39,6 +39,9 @@ class AuthService {
     
     // Initialize current admin status from stored preferences
     _currentAdminStatus = isAdminUser;
+    if (kDebugMode) {
+      print('AuthService: Initialized currentAdminStatus from storage: $_currentAdminStatus');
+    }
     
     // Set up the auth state listener
     _firebaseAuth.authStateChanges().listen(_onAuthStateChanged);
@@ -130,17 +133,37 @@ class AuthService {
 
   // Check if user is admin based on email
   Future<bool> _checkIfAdminUser(String? email) async {
-    if (email == null) return false;
+    if (email == null) {
+      if (kDebugMode) {
+        print('AuthService: _checkIfAdminUser - email is null');
+      }
+      return false;
+    }
 
     try {
+      if (kDebugMode) {
+        print('AuthService: Fetching admin emails from Firestore for email: $email');
+      }
       List<String> adminEmails = await repository.getAdminUsers();
-      return adminEmails.contains(email.toLowerCase().trim());
+      if (kDebugMode) {
+        print('AuthService: Admin emails from Firestore: $adminEmails');
+      }
+      final normalizedEmail = email.toLowerCase().trim();
+      final isAdmin = adminEmails.contains(normalizedEmail);
+      if (kDebugMode) {
+        print('AuthService: Checking if "$normalizedEmail" is in admin list: $isAdmin');
+      }
+      return isAdmin;
     } catch (e) {
       if (kDebugMode) {
-        print('Error checking admin status: $e');
+        print('AuthService: Error checking admin status: $e');
       }
       // Fallback to hardcoded check if Firestore fails
-      return email.toLowerCase() == 'superdevelopersuper@gmail.com';
+      final fallbackCheck = email.toLowerCase() == 'superdevelopersuper@gmail.com';
+      if (kDebugMode) {
+        print('AuthService: Using fallback check for $email: $fallbackCheck');
+      }
+      return fallbackCheck;
     }
   }
 

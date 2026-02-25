@@ -304,6 +304,7 @@ abstract class BaseVideoWidgetState<T extends BaseVideoWidget> extends State<T> 
     // For web, use nested structure to match thumbnail layout
     // For mobile, use simple structure that was already working
     if (kIsWeb && _imageAspectRatio != null) {
+      final videoAspectRatio = _controller!.value.aspectRatio == 0 ? 16 / 9 : _controller!.value.aspectRatio;
       return AspectRatio(
         aspectRatio: aspectRatio,
         child: Container(
@@ -312,7 +313,7 @@ abstract class BaseVideoWidgetState<T extends BaseVideoWidget> extends State<T> 
             children: [
               Center(
                 child: AspectRatio(
-                  aspectRatio: _controller!.value.aspectRatio == 0 ? 16 / 9 : _controller!.value.aspectRatio,
+                  aspectRatio: videoAspectRatio,
                   child: VideoPlayer(_controller!),
                 ),
               ),

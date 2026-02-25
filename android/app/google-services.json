@@ -1,0 +1,64 @@
+{
+  "project_info": {
+    "project_number": "215424509556",
+    "firebase_url": "https://famous-statements.firebaseio.com",
+    "project_id": "famous-statements",
+    "storage_bucket": "famous-statements.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:215424509556:android:c2e79504c6cb3a268c1321",
+        "android_client_info": {
+          "package_name": "com.armenia.famousstatements"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "215424509556-1a1trrc19a9ft2oi99m23r9662jcl3vi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.armenia.famousstatements",
+            "certificate_hash": "5171637806ef61d4819cb39c236d0637e4a7c4a2"
+          }
+        },
+        {
+          "client_id": "215424509556-80k47msn5hsj3rp3nktf3nu7q04bio61.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.armenia.famousstatements",
+            "certificate_hash": "2ec99ccbbf235e53ada594a8382943bc9777259a"
+          }
+        },
+        {
+          "client_id": "215424509556-rrgict5rc84au1cadea1dl9q87bn6kr0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSxxt8b2UtBIPFoNngtKRfjiE5FzHTVrk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "215424509556-rrgict5rc84au1cadea1dl9q87bn6kr0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "215424509556-4micsibp030uhsm3gm5i17429mk6hlvh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.armenia.famousstatements",
+                "app_store_id": "1523054038"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

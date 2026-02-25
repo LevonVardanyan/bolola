@@ -1,0 +1,2 @@
+/Users/lyovon/Programming/AndroidProjects/bolola/android/app/.cxx/RelWithDebInfo/5c5n1as4/arm64-v8a/CMakeFiles/edit_cache.dir
+/Users/lyovon/Programming/AndroidProjects/bolola/android/app/.cxx/RelWithDebInfo/5c5n1as4/arm64-v8a/CMakeFiles/rebuild_cache.dir

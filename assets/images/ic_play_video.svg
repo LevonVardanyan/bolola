@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="58px" height="58px" viewBox="0 0 58 58" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->
+    <title>Play</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Play" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" transform="translate(3.000000, 3.000000)">
+            <circle id="Oval" stroke="#FFFFFF" stroke-width="3" fill-opacity="0.15" fill="#000000" cx="26" cy="26" r="26"></circle>
+            <path d="M30.7716631,20.3822659 L36.4662784,31.2538042 C36.9788064,32.2322667 36.6010918,33.4409533 35.6226293,33.9534813 C35.3362888,34.1034692 35.0178602,34.1818182 34.6946153,34.1818182 L23.3053847,34.1818182 C22.2008152,34.1818182 21.3053847,33.2863877 21.3053847,32.1818182 C21.3053847,31.8585733 21.3837337,31.5401447 21.5337216,31.2538042 L27.2283369,20.3822659 C27.7408649,19.4038034 28.9495515,19.0260888 29.928014,19.5386168 C30.2885142,19.7274502 30.5828296,20.0217657 30.7716631,20.3822659 Z" id="Triangle-Copy" fill="#FFFFFF" transform="translate(29.000000, 25.590909) rotate(-270.000000) translate(-29.000000, -25.590909) "></path>
+        </g>
+    </g>
+</svg>

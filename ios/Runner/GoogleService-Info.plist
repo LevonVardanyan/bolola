@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>215424509556-4micsibp030uhsm3gm5i17429mk6hlvh.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.215424509556-4micsibp030uhsm3gm5i17429mk6hlvh</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>215424509556-80k47msn5hsj3rp3nktf3nu7q04bio61.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDkSGKNV8t9OLHUN3T9V4uQQ6XXxtxuJ0g</string>
+	<key>GCM_SENDER_ID</key>
+	<string>215424509556</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.armenia.famousstatements</string>
+	<key>PROJECT_ID</key>
+	<string>famous-statements</string>
+	<key>STORAGE_BUCKET</key>
+	<string>famous-statements.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:215424509556:ios:509292e1af2c7c0a8c1321</string>
+	<key>DATABASE_URL</key>
+	<string>https://famous-statements.firebaseio.com</string>
+</dict>
+</plist>

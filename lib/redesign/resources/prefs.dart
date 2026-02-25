@@ -30,7 +30,7 @@ setSavedDate() async {
   isAutoPlay = storage.read(PREF_IS_AUTO_PLAY) ?? true;
   isLoop = storage.read(PREF_IS_LOOP) ?? false;
   isLoggedIn = storage.read(PREF_IS_LOGGED_IN) ?? false;
-  isAdminUser = kDebugMode ? true : (storage.read(PREF_IS_ADMIN_USER) ?? false);
+  isAdminUser = storage.read(PREF_IS_ADMIN_USER) ?? false;
   isProductionEnvironment = storage.read(PREF_IS_PRODUCTION_ENV) ?? envDefaultValue;
   currentUserId = storage.read(PREF_CURRENT_USER_ID) ?? "";
   currentUserName = storage.read(PREF_CURRENT_USER_NAME) ?? "";
@@ -38,6 +38,10 @@ setSavedDate() async {
   currentUserPhotoUrl = storage.read(PREF_CURRENT_USER_PHOTO_URL) ?? "";
 
   lastUpdateTime = storage.hasData(PREF_LAST_UPDATE_TIME) ? DateFormat("yyyy-MM-dd").parse(storage.read(PREF_LAST_UPDATE_TIME)) : DateTime.now();
+
+  if (kDebugMode) {
+    print('Prefs: Loaded saved preferences - isLoggedIn: $isLoggedIn, isAdminUser: $isAdminUser, userEmail: $currentUserEmail');
+  }
 }
 
 saveIsAutoPlay(bool autoPlay) {
@@ -61,8 +65,11 @@ saveLoginState(bool loggedIn) {
 }
 
 saveAdminUser(bool admin) {
-  isAdminUser = kDebugMode ? true : admin;
+  isAdminUser = admin;
   storage.write(PREF_IS_ADMIN_USER, isAdminUser);
+  if (kDebugMode) {
+    print('Prefs: Saved admin status - isAdminUser: $isAdminUser');
+  }
 }
 
 saveProductionEnvironment(bool isProd) {
@@ -84,7 +91,7 @@ saveCurrentUser(String userId, String userName, String userEmail, String photoUr
 
 clearUserData() {
   isLoggedIn = false;
-  isAdminUser = kDebugMode ? true : false;
+  isAdminUser = false;
   currentUserId = "";
   currentUserName = "";
   currentUserEmail = "";

@@ -96,7 +96,10 @@ void main() async {
     }
 
     // Initialize AuthService early to ensure auth state listener is set up
+    // This will check for logged-in users and admin status on both mobile and web
+    if (kDebugMode) print('Initializing AuthService to check for logged-in admin users...');
     AuthService().initialize();
+    if (kDebugMode) print('AuthService initialization complete');
 
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitDown,

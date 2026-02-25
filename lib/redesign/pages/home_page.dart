@@ -187,36 +187,52 @@ class _HomePageRouteState extends State<HomePageRoute> with TickerProviderStateM
       },
       child: BlocProvider(
           create: (_) => appBloc,
-          child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            backgroundColor: AppTheme.primaryDark,
-            bottomNavigationBar: _buildBottomNavigationBar(),
-            drawer: getDrawer(),
-            body: Center(
-                child: Stack(
-              children: [
-                PageView(
-                  scrollBehavior: CupertinoScrollBehavior(),
-                  controller: pageController,
-                  children: [for (var i = 0; i < 3; i++) _pages[i]],
-                ),
-                StreamBuilder<bool>(
-                    stream: appBloc.isShowSearchStream,
-                    initialData: false,
-                    builder: (context, snapshot) {
-                      return snapshot.data == true
-                          ? SearchPage(
-                              appBloc,
-                              backClick: () {
-                                setState(() {
-                                  appBloc.closeCategoriesSearch();
-                                });
-                              },
-                            )
-                          : Container();
-                    })
-              ],
-            )),
+          child: StreamBuilder<bool>(
+            stream: AuthService().adminStatusStream,
+            initialData: AuthService().currentAdminStatus,
+            builder: (context, adminSnapshot) {
+              final newAdminStatus = adminSnapshot.data ?? AuthService().currentAdminStatus;
+              if (isAdminUser != newAdminStatus) {
+                isAdminUser = newAdminStatus;
+                if (kDebugMode) {
+                  print('HomePage: Admin status changed to $isAdminUser');
+                }
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) setState(() {});
+                });
+              }
+              return Scaffold(
+                resizeToAvoidBottomInset: false,
+                backgroundColor: AppTheme.primaryDark,
+                bottomNavigationBar: _buildBottomNavigationBar(),
+                drawer: getDrawer(),
+                body: Center(
+                    child: Stack(
+                  children: [
+                    PageView(
+                      scrollBehavior: CupertinoScrollBehavior(),
+                      controller: pageController,
+                      children: [for (var i = 0; i < 3; i++) _pages[i]],
+                    ),
+                    StreamBuilder<bool>(
+                        stream: appBloc.isShowSearchStream,
+                        initialData: false,
+                        builder: (context, snapshot) {
+                          return snapshot.data == true
+                              ? SearchPage(
+                                  appBloc,
+                                  backClick: () {
+                                    setState(() {
+                                      appBloc.closeCategoriesSearch();
+                                    });
+                                  },
+                                )
+                              : Container();
+                        })
+                  ],
+                )),
+              );
+            },
           )),
     );
   }
@@ -340,14 +356,15 @@ class _HomePageRouteState extends State<HomePageRoute> with TickerProviderStateM
         builder: (context, authSnapshot) {
           return StreamBuilder<bool>(
             stream: AuthService().adminStatusStream,
-            initialData: isAdminUser,
+            initialData: AuthService().currentAdminStatus,
             builder: (context, adminSnapshot) {
-              if (adminSnapshot.hasData) {
-                isAdminUser = adminSnapshot.data!;
+              final currentAdmin = adminSnapshot.data ?? AuthService().currentAdminStatus;
+              if (isAdminUser != currentAdmin) {
+                isAdminUser = currentAdmin;
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) setState(() {});
+                });
               }
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (mounted) setState(() {});
-              });
           
           return ListView(
             // Important: Remove any padding from the ListView.

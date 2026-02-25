@@ -21,21 +21,39 @@ class AuthService {
 
   final _adminStatusController = StreamController<bool>.broadcast();
   Stream<bool> get adminStatusStream => _adminStatusController.stream;
+  
+  bool _currentAdminStatus = false;
+  bool get currentAdminStatus => _currentAdminStatus;
 
   // Initialize the service
   void initialize() {
     if (_isInitialized) return; // Prevent multiple initializations
 
+    if (kDebugMode) {
+      print('AuthService: Initializing authentication service...');
+    }
+
     if (!kIsWeb) {
       _googleSignIn = GoogleSignIn();
     }
+    
+    // Initialize current admin status from stored preferences
+    _currentAdminStatus = isAdminUser;
+    
     // Set up the auth state listener
     _firebaseAuth.authStateChanges().listen(_onAuthStateChanged);
 
     // Also check current user immediately if already signed in
     final currentUser = _firebaseAuth.currentUser;
     if (currentUser != null) {
+      if (kDebugMode) {
+        print('AuthService: Found existing logged-in user: ${currentUser.email}');
+      }
       _onAuthStateChanged(currentUser);
+    } else {
+      if (kDebugMode) {
+        print('AuthService: No logged-in user found');
+      }
     }
 
     _isInitialized = true;
@@ -45,6 +63,9 @@ class AuthService {
   void _onAuthStateChanged(firebase_auth.User? firebaseUser) async {
     if (firebaseUser != null) {
       // User is signed in
+      if (kDebugMode) {
+        print('AuthService: Processing user authentication for: ${firebaseUser.email}');
+      }
       try {
         // Try to get user from backend via repository
         try {
@@ -66,6 +87,10 @@ class AuthService {
         // Check if user is admin based on email
         bool isAdmin = await _checkIfAdminUser(firebaseUser.email);
 
+        if (kDebugMode) {
+          print('AuthService: Admin check complete for ${firebaseUser.email}: isAdmin=$isAdmin');
+        }
+
         // Update admin status if needed
         if (user?.isAdmin != isAdmin) {
           user = user?.copyWith(isAdmin: isAdmin);
@@ -81,13 +106,24 @@ class AuthService {
           user?.email ?? firebaseUser.email ?? '',
           user?.photoUrl ?? firebaseUser.photoURL ?? '',
         );
+        _currentAdminStatus = isAdmin;
         _adminStatusController.add(isAdmin);
+        
+        if (kDebugMode) {
+          print('AuthService: Admin mode ${isAdmin ? "ENABLED" : "DISABLED"}');
+        }
       } catch (e) {
-        // Handle error silently
+        if (kDebugMode) {
+          print('AuthService: Error processing user authentication: $e');
+        }
       }
     } else {
       // User is signed out
+      if (kDebugMode) {
+        print('AuthService: User signed out, clearing admin mode');
+      }
       clearUserData();
+      _currentAdminStatus = false;
       _adminStatusController.add(false);
     }
   }

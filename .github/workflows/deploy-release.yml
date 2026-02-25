@@ -1,0 +1,54 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - release
+
+jobs:
+  deploy:
+    name: Build and Deploy Flutter Web
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+      
+      - name: Get Flutter dependencies
+        run: flutter pub get
+      
+      - name: Build Flutter Web
+        run: flutter build web --release --web-renderer html
+      
+      - name: Setup SSH Key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
+      
+      - name: Add server to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p 22 173.249.9.31 >> ~/.ssh/known_hosts
+      
+      - name: Deploy to Server
+        run: |
+          # Upload build to server
+          rsync -avz -e "ssh -p22 -o StrictHostKeyChecking=no" \
+            build/web/ \
+            root@173.249.9.31:/root/projects/bolola/build/web/
+          
+          # Run deployment script on server
+          ssh -p22 root@173.249.9.31 "cd /root/projects/bolola && bash deploy-web.sh"
+      
+      - name: Deployment Summary
+        run: |
+          echo "✅ Deployment completed successfully!"
+          echo "🌐 Website: https://bolola.org"
+          echo "📅 Deployed at: $(date)"
+          echo "🔗 Commit: ${{ github.sha }}"

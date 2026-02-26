@@ -30,6 +30,7 @@ import 'package:politicsstatements/redesign/widgets/commong_widgets.dart';
 import 'package:politicsstatements/redesign/services/auth_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:politicsstatements/redesign/routing/app_router.dart';
 
 import 'moderation_page.dart';
 
@@ -418,7 +419,7 @@ class _HomePageRouteState extends State<HomePageRoute> with TickerProviderStateM
                 ),
                 onTap: () {
                   Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => SourcesRoute()));
+                  AppRouter.navigateToSources(context);
                 },
               ),
               ListTile(
@@ -450,7 +451,7 @@ class _HomePageRouteState extends State<HomePageRoute> with TickerProviderStateM
                 ),
                 onTap: () {
                   Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => AboutRoute()));
+                  AppRouter.navigateToAbout(context);
                 },
               ),
               isAdminUser
@@ -465,7 +466,7 @@ class _HomePageRouteState extends State<HomePageRoute> with TickerProviderStateM
                       ),
                       onTap: () {
                         Navigator.pop(context);
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => ModerationRoute(appBloc, "video")));
+                        AppRouter.navigateToModeration(context, appBloc, "video");
                       },
                     )
                   : Container(),
@@ -589,7 +590,7 @@ class _HomePageRouteState extends State<HomePageRoute> with TickerProviderStateM
                       ),
                       onTap: () {
                         Navigator.pop(context);
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => UserMessagesPage(appBloc: appBloc)));
+                        AppRouter.navigateToUserMessages(context, appBloc);
                       },
                     )
                   : Container(),

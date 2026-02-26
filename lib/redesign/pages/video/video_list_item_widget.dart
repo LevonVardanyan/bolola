@@ -70,21 +70,25 @@ class _VideoItemWidgetState extends BaseVideoWidgetState<VideoItemWidget> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(AppTheme.mediaCardRadius - 1),
-              topRight: Radius.circular(AppTheme.mediaCardRadius - 1),
-            ),
-            child: Stack(
-              children: [
-                buildVideoPlayer(),
-                if (_isNewGroup)
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: _buildNewBadge(),
+          Expanded(
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(AppTheme.mediaCardRadius - 1),
+                topRight: Radius.circular(AppTheme.mediaCardRadius - 1),
+              ),
+              child: Stack(
+                children: [
+                  Center(
+                    child: buildVideoPlayer(),
                   ),
-              ],
+                  if (_isNewGroup)
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: _buildNewBadge(),
+                    ),
+                ],
+              ),
             ),
           ),
           buildSeekBar(),
@@ -137,46 +141,43 @@ class _VideoItemWidgetState extends BaseVideoWidgetState<VideoItemWidget> {
   }
 
   Widget _buildWebVideoInfo() {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Text(
-                widget.item.name ?? "",
-                style: AppTheme.mediaItemTitleStyle.copyWith(fontSize: 14),
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            widget.item.name ?? "",
+            style: AppTheme.mediaItemTitleStyle.copyWith(fontSize: 14),
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Text(
+                  "${widget.item.shareCount} shares",
+                  style: AppTheme.mediaItemSubtitleStyle.copyWith(fontSize: 12),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-            ),
-            const SizedBox(height: 4),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Text(
-                    "${widget.item.shareCount} shares",
-                    style: AppTheme.mediaItemSubtitleStyle.copyWith(fontSize: 12),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    buildFavoriteButton(),
-                    const SizedBox(width: 8),
-                    buildShareButton(),
-                    const SizedBox(width: 8),
-                    buildHelpUsButton(),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  buildFavoriteButton(),
+                  const SizedBox(width: 8),
+                  buildShareButton(),
+                  const SizedBox(width: 8),
+                  buildHelpUsButton(),
+                ],
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

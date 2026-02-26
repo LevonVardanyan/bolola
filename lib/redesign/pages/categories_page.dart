@@ -16,6 +16,7 @@ import 'package:politicsstatements/redesign/resources/theme.dart';
 import 'package:politicsstatements/redesign/resources/rest_client.dart';
 import 'package:politicsstatements/redesign/utils/popup_utils.dart';
 import 'package:politicsstatements/redesign/widgets/media_widgets.dart';
+import 'package:politicsstatements/redesign/routing/app_router.dart';
 
 import '../resources/models/media_category.dart';
 import '../resources/models/media_group.dart';
@@ -461,7 +462,7 @@ class _MediaCategoryWidgetState extends State<MediaCategoryWidget> {
                           widget.category.alias!,
                           () {
                             if (isAdminUser || widget.category.groups![groupIndex].items?.isNotEmpty == true)
-                              Navigator.push(context, MaterialPageRoute(builder: (_) => MediaGroupRoute(widget.appBloc, widget.category.groups![groupIndex])));
+                              AppRouter.navigateToMediaGroup(context, widget.appBloc, widget.category.groups![groupIndex]);
                           },
                           onDeleted: () => setState(() {}),
                           onEdited: () => setState(() {}),

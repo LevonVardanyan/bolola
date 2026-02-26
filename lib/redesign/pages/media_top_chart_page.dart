@@ -34,7 +34,8 @@ class _MediaTopChartPageState extends State<MediaTopChartPage> {
         showActionBar: false,
         backClicked: widget.backClick,
         isAutoPlayDefault: isAutoPlay,
-        showSortAndShuffle: false, tabChanged: (index) {
+        showSortAndShuffle: false,
+        tabChanged: (index) {
       isAudio = index == 1;
       // mediaListView?.setItems(isAudio ? audioTopChart : videoTopChart);
     });

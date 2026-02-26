@@ -291,8 +291,9 @@ class _VideoListWidgetState extends State<VideoListWidget> {
           // Seek bar: ~40px, Info: ~100px = ~140px total
           final fixedHeightsPixels = 140.0;
           
-          // Total card height in pixels (with 15% extra for longer titles)
-          final totalCardHeight = videoHeight + (fixedHeightsPixels * 1.15);
+          // Total card height in pixels (with 25% extra - was 15%)
+          // This ensures title and actions are always visible
+          final totalCardHeight = videoHeight + (fixedHeightsPixels * 1.25);
           
           // Card aspect ratio = width / height
           return cardWidth / totalCardHeight;

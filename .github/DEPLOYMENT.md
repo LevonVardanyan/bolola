@@ -11,6 +11,18 @@ When you push to the `release` branch:
 4. Runs `deploy-web.sh` on server to update nginx cache and permissions
 5. Your website is live at https://bolola.org
 
+## Prerequisites
+
+Before setting up deployment, ensure:
+
+1. ✅ **Nginx is configured for SPA routing** - See [NGINX_SETUP.md](../NGINX_SETUP.md)
+   - Required for browser back/forward buttons to work
+   - Must be done once before first deployment
+
+2. ✅ **SSH access to server** - You need root access to the server
+
+3. ✅ **GitHub repository access** - Ability to add secrets and workflows
+
 ## Initial Setup (One-Time)
 
 ### Step 1: Generate SSH Key for GitHub Actions

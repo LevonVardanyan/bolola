@@ -21,6 +21,8 @@ import 'package:politicsstatements/redesign/services/auth_service.dart';
 import 'package:politicsstatements/redesign/services/api_key_service.dart';
 import 'package:politicsstatements/redesign/resources/database/database_refactor.dart';
 import 'package:politicsstatements/redesign/resources/repository.dart';
+import 'package:politicsstatements/redesign/routing/app_router.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -41,6 +43,10 @@ void main() async {
 
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
+    
+    if (kIsWeb) {
+      usePathUrlStrategy();
+    }
     
     // Log version information - this will be compiled into main.dart.js
 
@@ -125,20 +131,18 @@ void main() async {
 class BololaApp extends StatelessWidget {
   const BololaApp({Key? key}) : super(key: key);
 
-  // This widget is the root of application.
   @override
   Widget build(BuildContext context) {
-    platform = Theme.of(context).platform; //?? defaultTargetPlatform;
+    platform = Theme.of(context).platform;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
-      routes: {
-        '/': (context) => HomePageRoute(),
-      },
+      initialRoute: AppRouter.home,
+      onGenerateRoute: AppRouter.onGenerateRoute,
+      navigatorObservers: [AppRouter.routeObserver],
       builder: (context, child) {
         return MediaQuery(
           child: child!,
-          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0), //textScaleFactor is for ignoring system text scale
+          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
         );
       },
     );
